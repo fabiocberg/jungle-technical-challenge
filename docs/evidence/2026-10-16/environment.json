@@ -1,0 +1,8 @@
+{
+  "command": ["python3", "/tmp/jungle-audit-environment.py"],
+  "startedAt": "2026-10-16T15:10:40.301420-03:00",
+  "durationSeconds": 0.575,
+  "exitCode": 0,
+  "output": "environment.txt",
+  "sha256": "16883324b225a2d2c740887b54d3c983e814a9177ee90236d8941c36652c41d0"
+}

@@ -1,0 +1,45 @@
+{
+  "name": "jungle-wagering-processor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Distributed, ledger-backed wagering processor",
+  "engines": {
+    "bun": ">=1.3.0 <2"
+  },
+  "scripts": {
+    "start": "bun src/main.ts",
+    "dev": "bun --watch src/main.ts",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc -p tsconfig.build.json",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "bun test tests/unit",
+    "test:unit": "bun test tests/unit --coverage",
+    "test:integration": "bun test tests/integration --timeout 120000",
+    "test:all": "bun run typecheck && bun run test:unit && bun run test:integration",
+    "migration:run": "bun scripts/migrate.ts up",
+    "migration:revert": "bun scripts/migrate.ts down",
+    "infra:up": "docker compose up -d --wait postgres localstack",
+    "infra:down": "docker compose down",
+    "demo": "bun scripts/demo.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-sqs": "^3.0.0",
+    "@nestjs/common": "^11.0.0",
+    "@nestjs/core": "^11.0.0",
+    "@nestjs/platform-express": "^11.0.0",
+    "pg": "^8.0.0",
+    "prom-client": "^15.0.0",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.0",
+    "typeorm": "^0.3.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.0",
+    "@types/express": "^5.0.0",
+    "@types/pg": "^8.0.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.9.0"
+  }
+}

@@ -1,0 +1,3 @@
+$ bun run build
+
+$ tsc -p tsconfig.build.json

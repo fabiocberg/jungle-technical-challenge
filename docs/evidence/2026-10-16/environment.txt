@@ -1,0 +1,25 @@
+$ python3 /tmp/jungle-audit-environment.py
+
+{
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "machine": "arm64"
+}
+{"command": ["bun", "--version"]}
+1.4.3
+{"command": ["docker", "--version"]}
+Docker version 29.9.1, build dfc520dcc2
+{"command": ["docker", "compose", "version"]}
+Docker Compose version 5.6.0
+{"command": ["docker", "compose", "ps"]}
+NAME                        IMAGE                         COMMAND                  SERVICE      CREATED         STATUS                   PORTS
+jungle-wager-app-1          jungle-wager-app              "/usr/local/bin/dock…"   app          4 minutes ago   Up 4 minutes (healthy)   0.0.0.0:3002->3000/tcp, [::]:3002->3000/tcp
+jungle-wager-app-2          jungle-wager-app              "/usr/local/bin/dock…"   app          4 minutes ago   Up 4 minutes (healthy)   0.0.0.0:3001->3000/tcp, [::]:3001->3000/tcp
+jungle-wager-app-3          jungle-wager-app              "/usr/local/bin/dock…"   app          4 minutes ago   Up 4 minutes (healthy)   0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp
+jungle-wager-localstack-1   localstack/localstack:4.7.0   "docker-entrypoint.sh"   localstack   8 hours ago     Up 9 minutes (healthy)   4510-4559/tcp, 5678/tcp, 127.0.0.1:4566->4566/tcp
+jungle-wager-postgres-1     postgres:17.6-alpine          "docker-entrypoint.s…"   postgres     8 hours ago     Up 2 minutes (healthy)   127.0.0.1:5432->5432/tcp
+{"command": ["docker", "compose", "exec", "-T", "postgres", "psql", "-U", "wager", "-d", "wager", "-Atc", "SELECT version()"]}
+PostgreSQL 17.6 on aarch64-unknown-linux-musl, compiled by gcc (Alpine 14.2.0) 14.2.0, 64-bit
+{"command": ["python3", "-c", "import urllib.request; print(urllib.request.urlopen('http://localhost:4566/_localstack/info').read().decode())"]}
+{"version": "4.7.0:82de91e30", "edition": "community", "is_license_activated": false, "session_id": "a0a7fdc8-8b7a-4273-9bde-fab76e92b69d", "machine_id": "gen_403248c4-721", "system": "docker", "is_docker": true, "server_time_utc": "2026-10-16T18:10:40", "uptime": 568}
+{"command": ["docker", "compose", "exec", "-T", "app", "bun", "--version"]}
+1.4.3

@@ -1,0 +1,63 @@
+$ bun run test:unit
+
+$ bun test tests/unit --coverage
+bun test v1.4.3 (c6da4a4d3)
+
+tests/unit/telemetry.test.ts:
+(pass) structured logs retain trace identifiers and discard unapproved sensitive fields [3.65ms]
+(pass) all mandatory metrics expose values and labels through the Prometheus registry [1.09ms]
+
+tests/unit/domain.test.ts:
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > cent arithmetic and values beyond Number.MAX_SAFE_INTEGER remain exact [1.27ms]
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount "NaN" [1.20ms]
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount "Infinity"
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount "1e2"
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount ""
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount "1.001"
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount "-1.00"
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount "-0.00"
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount "1"
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount "1.0"
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount "01.00"
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount " 1.00"
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount "+1.00"
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount "1,00"
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount "0x10"
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount "100000000000000000000000000.00"
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > runtime numeric input, unsupported currency, overflow and mixed currency are errors [0.24ms]
+(pass) Wallet and immutable balanced ledger > moves balance and version together, rejected movement leaves state untouched [2.24ms]
+(pass) Wallet and immutable balanced ledger > factory rejects inconsistent ledger and negative wallet, rehydration preserves version [0.04ms]
+(pass) Transactions: operation rules and lifecycle > BET has explicit movement semantics [0.08ms]
+(pass) Transactions: operation rules and lifecycle > WIN has explicit movement semantics
+(pass) Transactions: operation rules and lifecycle > LOSS has explicit movement semantics
+(pass) Transactions: operation rules and lifecycle > REFUND has explicit movement semantics
+(pass) Transactions: operation rules and lifecycle > ROLLBACK has explicit movement semantics
+(pass) Transactions: operation rules and lifecycle > rollback inverts credits; WIN can refer to a BET without equal amounts [0.05ms]
+(pass) Transactions: operation rules and lifecycle > requires full amount and same identity on processed valid reference [0.06ms]
+(pass) Transactions: operation rules and lifecycle > PROCESSED is terminal for every transition [0.06ms]
+(pass) Transactions: operation rules and lifecycle > REJECTED is terminal for every transition [0.03ms]
+(pass) Transactions: operation rules and lifecycle > FAILED is terminal for every transition
+(pass) Transactions: operation rules and lifecycle > pending can be resumed, rehydrate does not repeat transition validation [0.03ms]
+(pass) Persistent-message domain and canonical idempotency > canonical hash sorts recursively, preserves values and detects changed business payload [0.90ms]
+(pass) Persistent-message domain and canonical idempotency > header is required, body key and OPENING are not public commands [2.35ms]
+(pass) Persistent-message domain and canonical idempotency > inbox cannot be processed twice; outbox retries exponentially and serializes concrete events [0.63ms]
+---------------------------------|---------|---------|-------------------
+File                             | % Funcs | % Lines | Uncovered Line #s
+---------------------------------|---------|---------|-------------------
+All files                        |   76.69 |   86.93 |
+ src/application/contracts.ts    |  100.00 |  100.00 | 
+ src/domain/errors.ts            |   50.00 |   58.33 | 9-13
+ src/domain/events.ts            |   88.89 |   97.06 | 16-18
+ src/domain/idempotency.ts       |  100.00 |  100.00 | 
+ src/domain/ledger.ts            |   75.00 |   84.44 | 36-42
+ src/domain/messages.ts          |   48.00 |   57.32 | 18-33,66-81,88-90
+ src/domain/money.ts             |  100.00 |  100.00 | 
+ src/domain/transaction.ts       |   78.12 |   84.33 | 67-72,85-87,94-96,106-111,120-122
+ src/domain/wallet.ts            |   76.92 |   87.84 | 43-45,55-60
+ src/infrastructure/telemetry.ts |   50.00 |  100.00 | 
+---------------------------------|---------|---------|-------------------
+
+ 35 pass
+ 0 fail
+ 132 expect() calls
+Ran 35 tests across 2 files. [127.00ms]

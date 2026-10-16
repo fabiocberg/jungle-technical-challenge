@@ -1,0 +1,145 @@
+$ docker compose up -d --build --wait --scale app=3
+
+time="2026-10-16T15:06:02-03:00" level=warning msg="buildx Docker CLI plugin not found: falling back to the classic builder. BuildKit-only build features (multi-arch, secrets, ssh, additional contexts, ...) will not be available"
+ Image jungle-wager-migrate Building 
+ Image jungle-wager-migrate Building 
+Sending build context to Docker daemon  92.37kB
+Step 1/8 : FROM oven/bun:1.4.3 AS dependencies
+ ---> ec06c3b6cea0
+Step 2/8 : WORKDIR /app
+ ---> Using cache
+ ---> 9b4576bea6d7
+Step 3/8 : COPY package.json bun.lock ./
+ ---> Using cache
+ ---> f9de0a8eaaa3
+Step 4/8 : RUN bun install --frozen-lockfile
+ ---> Using cache
+ ---> 6fd1881d3278
+Step 5/8 : FROM dependencies AS test
+ ---> 6fd1881d3278
+Step 6/8 : COPY . .
+ ---> 50258754fca6
+Step 7/8 : CMD ["bun", "run", "test:all"]
+ ---> Running in 094170f17071
+ ---> Removed intermediate container 094170f17071
+ ---> c44e56885304
+Step 8/8 : LABEL com.docker.compose.image.builder=classic
+ ---> Running in 8c6c626f8215
+ ---> Removed intermediate container 8c6c626f8215
+ ---> 6bc268a54e1e
+Successfully built 6bc268a54e1e
+Successfully tagged jungle-wager-migrate:latest
+ Image jungle-wager-migrate Built 
+ Image jungle-wager-migrate Built 
+ Image jungle-wager-app Building 
+ Image jungle-wager-app Building 
+Sending build context to Docker daemon  92.43kB
+Step 1/23 : FROM oven/bun:1.4.3 AS dependencies
+ ---> ec06c3b6cea0
+Step 2/23 : WORKDIR /app
+ ---> Using cache
+ ---> 9b4576bea6d7
+Step 3/23 : COPY package.json bun.lock ./
+ ---> Using cache
+ ---> f9de0a8eaaa3
+Step 4/23 : RUN bun install --frozen-lockfile
+ ---> Using cache
+ ---> 6fd1881d3278
+Step 5/23 : FROM dependencies AS test
+ ---> 6fd1881d3278
+Step 6/23 : COPY . .
+ ---> 7e623c21ea4b
+Step 7/23 : CMD ["bun", "run", "test:all"]
+ ---> Running in 7558eaea1c22
+ ---> Removed intermediate container 7558eaea1c22
+ ---> acc6d08019da
+Step 8/23 : FROM dependencies AS build
+ ---> 6fd1881d3278
+Step 9/23 : COPY . .
+ ---> Using cache
+ ---> 7e623c21ea4b
+Step 10/23 : RUN bun run typecheck && bun run build
+ ---> Running in 0781b456b9e3
+[91m$ tsc --noEmit
+[0m[91m$ tsc -p tsconfig.build.json
+[0m ---> Removed intermediate container 0781b456b9e3
+ ---> 2b4fa6025941
+Step 11/23 : FROM oven/bun:1.4.3 AS production-dependencies
+ ---> ec06c3b6cea0
+Step 12/23 : WORKDIR /app
+ ---> Using cache
+ ---> 9b4576bea6d7
+Step 13/23 : COPY package.json bun.lock ./
+ ---> Using cache
+ ---> f9de0a8eaaa3
+Step 14/23 : RUN bun install --production --frozen-lockfile
+ ---> Using cache
+ ---> 406ac3d41ace
+Step 15/23 : FROM oven/bun:1.4.3-slim AS runtime
+ ---> 14a223fa3574
+Step 16/23 : WORKDIR /app
+ ---> Using cache
+ ---> 90db493302fc
+Step 17/23 : COPY --from=production-dependencies /app/node_modules ./node_modules
+ ---> Using cache
+ ---> 640abe8c9b68
+Step 18/23 : COPY --from=build /app/dist ./dist
+ ---> 92dd9622e8ec
+Step 19/23 : COPY package.json ./
+ ---> 8ec9b97ae3a7
+Step 20/23 : USER bun
+ ---> Running in 26dfcf6ad97f
+ ---> Removed intermediate container 26dfcf6ad97f
+ ---> b1a0db4e9129
+Step 21/23 : EXPOSE 3000
+ ---> Running in 32291ffab38c
+ ---> Removed intermediate container 32291ffab38c
+ ---> 465f09cc9948
+Step 22/23 : CMD ["bun", "dist/main.js"]
+ ---> Running in f7545a475d33
+ ---> Removed intermediate container f7545a475d33
+ ---> 1d1a945666be
+Step 23/23 : LABEL com.docker.compose.image.builder=classic
+ ---> Running in c077234b6f20
+ ---> Removed intermediate container c077234b6f20
+ ---> 01779a8a2fc9
+Successfully built 01779a8a2fc9
+Successfully tagged jungle-wager-app:latest
+ Image jungle-wager-app Built 
+ Image jungle-wager-app Built 
+ Container jungle-wager-postgres-1 Running 
+ Container jungle-wager-localstack-1 Running 
+ Container jungle-wager-migrate-1 Recreate 
+ Container jungle-wager-migrate-1 Recreated 
+ Container jungle-wager-app-1 Recreate 
+ Container jungle-wager-app-3 Recreate 
+ Container jungle-wager-app-2 Recreate 
+ Container jungle-wager-app-3 Recreated 
+ Container jungle-wager-app-1 Recreated 
+ Container jungle-wager-app-2 Recreated 
+ Container jungle-wager-postgres-1 Waiting 
+ Container jungle-wager-postgres-1 Healthy 
+ Container jungle-wager-migrate-1 Starting 
+ Container jungle-wager-migrate-1 Started 
+ Container jungle-wager-migrate-1 Waiting 
+ Container jungle-wager-localstack-1 Waiting 
+ Container jungle-wager-migrate-1 Exited 
+ Container jungle-wager-localstack-1 Healthy 
+ Container jungle-wager-app-3 Starting 
+ Container jungle-wager-app-3 Started 
+ Container jungle-wager-app-2 Starting 
+ Container jungle-wager-app-2 Started 
+ Container jungle-wager-app-1 Starting 
+ Container jungle-wager-app-1 Started 
+ Container jungle-wager-migrate-1 Waiting 
+ Container jungle-wager-app-3 Waiting 
+ Container jungle-wager-app-2 Waiting 
+ Container jungle-wager-app-1 Waiting 
+ Container jungle-wager-postgres-1 Waiting 
+ Container jungle-wager-localstack-1 Waiting 
+ Container jungle-wager-migrate-1 Exited 
+ Container jungle-wager-postgres-1 Healthy 
+ Container jungle-wager-localstack-1 Healthy 
+ Container jungle-wager-app-3 Healthy 
+ Container jungle-wager-app-2 Healthy 
+ Container jungle-wager-app-1 Healthy 

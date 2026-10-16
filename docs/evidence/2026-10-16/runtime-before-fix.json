@@ -1,0 +1,8 @@
+{
+  "command": ["bun", "scripts/verify-runtime.ts"],
+  "startedAt": "2026-10-16T15:05:08.403219-03:00",
+  "durationSeconds": 20.476,
+  "exitCode": 1,
+  "output": "runtime-before-fix.txt",
+  "sha256": "525f55abc669f638109c01651eb1876341656e16ce3f565da14fc6855c70e347"
+}

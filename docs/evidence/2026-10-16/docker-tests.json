@@ -1,0 +1,17 @@
+{
+  "command": [
+    "docker",
+    "compose",
+    "--profile",
+    "test",
+    "run",
+    "--build",
+    "--rm",
+    "tests"
+  ],
+  "startedAt": "2026-10-16T15:09:23.204930-03:00",
+  "durationSeconds": 24.856,
+  "exitCode": 0,
+  "output": "docker-tests.txt",
+  "sha256": "ce6860e7e4478dab3df9f68bc1be660b310dfcc505ff2a4f8df697f32685e43f"
+}

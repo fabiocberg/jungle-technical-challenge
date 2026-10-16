@@ -1,0 +1,76 @@
+name: jungle-wager
+services:
+  postgres:
+    image: postgres:17.6-alpine
+    environment:
+      POSTGRES_DB: wager
+      POSTGRES_USER: wager
+      POSTGRES_PASSWORD: wager
+    ports: ['127.0.0.1:5432:5432']
+    volumes: ['postgres-data:/var/lib/postgresql/data']
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U wager -d wager']
+      interval: 2s
+      timeout: 3s
+      retries: 30
+  localstack:
+    image: localstack/localstack:4.7.0
+    environment:
+      SERVICES: sqs
+      AWS_DEFAULT_REGION: us-east-1
+      SQS_ENDPOINT_STRATEGY: path
+      PERSISTENCE: '1'
+    ports: ['127.0.0.1:4566:4566']
+    volumes:
+      - ./docker/localstack/init.sh:/etc/localstack/init/ready.d/init.sh:ro
+      - localstack-data:/var/lib/localstack
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'awslocal sqs get-queue-url --queue-name wager-events.fifo >/dev/null',
+        ]
+      interval: 3s
+      timeout: 5s
+      retries: 60
+  migrate:
+    build: { context: ., target: test }
+    command: ['bun', 'run', 'migration:run']
+    environment: &environment
+      DATABASE_URL: postgres://wager:wager@postgres:5432/wager
+      SQS_ENDPOINT: http://localstack:4566
+      AWS_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+    depends_on:
+      postgres: { condition: service_healthy }
+  app:
+    build: { context: ., target: runtime }
+    environment: *environment
+    ports: ['3000-3002:3000']
+    stop_grace_period: 30s
+    init: true
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      localstack: { condition: service_healthy }
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'bun',
+          '-e',
+          "fetch('http://localhost:3000/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  tests:
+    profiles: [test]
+    build: { context: ., target: test }
+    environment: *environment
+    depends_on:
+      localstack: { condition: service_healthy }
+      postgres: { condition: service_healthy }
+volumes:
+  postgres-data:
+  localstack-data:

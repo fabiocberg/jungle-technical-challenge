@@ -1,0 +1,249 @@
+$ docker compose --profile test run --build --rm tests
+
+ Container jungle-wager-localstack-1 Running 
+ Container jungle-wager-postgres-1 Running 
+time="2026-10-16T15:09:23-03:00" level=warning msg="buildx Docker CLI plugin not found: falling back to the classic builder. BuildKit-only build features (multi-arch, secrets, ssh, additional contexts, ...) will not be available"
+ Image jungle-wager-tests Building 
+ Image jungle-wager-tests Building 
+Sending build context to Docker daemon  96.26kB
+Step 1/8 : FROM oven/bun:1.4.3 AS dependencies
+ ---> ec06c3b6cea0
+Step 2/8 : WORKDIR /app
+ ---> Using cache
+ ---> 9b4576bea6d7
+Step 3/8 : COPY package.json bun.lock ./
+ ---> Using cache
+ ---> f9de0a8eaaa3
+Step 4/8 : RUN bun install --frozen-lockfile
+ ---> Using cache
+ ---> 6fd1881d3278
+Step 5/8 : FROM dependencies AS test
+ ---> 6fd1881d3278
+Step 6/8 : COPY . .
+ ---> 480bc66b4b96
+Step 7/8 : CMD ["bun", "run", "test:all"]
+ ---> Running in b9ecd0d621ae
+ ---> Removed intermediate container b9ecd0d621ae
+ ---> a9f37891570d
+Step 8/8 : LABEL com.docker.compose.image.builder=classic
+ ---> Running in 66ef5a1264ae
+ ---> Removed intermediate container 66ef5a1264ae
+ ---> cf36de4c8eb7
+Successfully built cf36de4c8eb7
+Successfully tagged jungle-wager-tests:latest
+ Image jungle-wager-tests Built 
+ Image jungle-wager-tests Built 
+ Container jungle-wager-localstack-1 Waiting 
+ Container jungle-wager-postgres-1 Waiting 
+ Container jungle-wager-postgres-1 Healthy 
+ Container jungle-wager-localstack-1 Healthy 
+ Container jungle-wager-tests-run-15bcb62afffa Creating 
+ Container jungle-wager-tests-run-15bcb62afffa Created 
+$ bun run typecheck && bun run test:unit && bun run test:integration
+$ tsc --noEmit
+$ bun test tests/unit --coverage
+bun test v1.4.3 (c6da4a4d3)
+
+tests/unit/domain.test.ts:
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > cent arithmetic and values beyond Number.MAX_SAFE_INTEGER remain exact [0.16ms]
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount "NaN" [0.03ms]
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount "Infinity"
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount "1e2"
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount ""
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount "1.001"
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount "-1.00"
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount "-0.00"
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount "1"
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount "1.0"
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount "01.00"
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount " 1.00"
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount "+1.00"
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount "1,00"
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount "0x10"
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > rejects invalid amount "100000000000000000000000000.00"
+(pass) Money: exact fixed scale, no rounding and immutable arithmetic > runtime numeric input, unsupported currency, overflow and mixed currency are errors [0.08ms]
+(pass) Wallet and immutable balanced ledger > moves balance and version together, rejected movement leaves state untouched [2.43ms]
+(pass) Wallet and immutable balanced ledger > factory rejects inconsistent ledger and negative wallet, rehydration preserves version [0.06ms]
+(pass) Transactions: operation rules and lifecycle > BET has explicit movement semantics [0.11ms]
+(pass) Transactions: operation rules and lifecycle > WIN has explicit movement semantics
+(pass) Transactions: operation rules and lifecycle > LOSS has explicit movement semantics [0.01ms]
+(pass) Transactions: operation rules and lifecycle > REFUND has explicit movement semantics
+(pass) Transactions: operation rules and lifecycle > ROLLBACK has explicit movement semantics
+(pass) Transactions: operation rules and lifecycle > rollback inverts credits; WIN can refer to a BET without equal amounts [0.07ms]
+(pass) Transactions: operation rules and lifecycle > requires full amount and same identity on processed valid reference [0.14ms]
+(pass) Transactions: operation rules and lifecycle > PROCESSED is terminal for every transition [0.17ms]
+(pass) Transactions: operation rules and lifecycle > REJECTED is terminal for every transition [0.02ms]
+(pass) Transactions: operation rules and lifecycle > FAILED is terminal for every transition [0.02ms]
+(pass) Transactions: operation rules and lifecycle > pending can be resumed, rehydrate does not repeat transition validation [0.06ms]
+(pass) Persistent-message domain and canonical idempotency > canonical hash sorts recursively, preserves values and detects changed business payload [0.41ms]
+(pass) Persistent-message domain and canonical idempotency > header is required, body key and OPENING are not public commands [1.88ms]
+(pass) Persistent-message domain and canonical idempotency > inbox cannot be processed twice; outbox retries exponentially and serializes concrete events [0.37ms]
+
+tests/unit/telemetry.test.ts:
+(pass) structured logs retain trace identifiers and discard unapproved sensitive fields [0.33ms]
+(pass) all mandatory metrics expose values and labels through the Prometheus registry [0.61ms]
+---------------------------------|---------|---------|-------------------
+File                             | % Funcs | % Lines | Uncovered Line #s
+---------------------------------|---------|---------|-------------------
+All files                        |   76.69 |   86.93 |
+ src/application/contracts.ts    |  100.00 |  100.00 | 
+ src/domain/errors.ts            |   50.00 |   58.33 | 9-13
+ src/domain/events.ts            |   88.89 |   97.06 | 16-18
+ src/domain/idempotency.ts       |  100.00 |  100.00 | 
+ src/domain/ledger.ts            |   75.00 |   84.44 | 36-42
+ src/domain/messages.ts          |   48.00 |   57.32 | 18-33,66-81,88-90
+ src/domain/money.ts             |  100.00 |  100.00 | 
+ src/domain/transaction.ts       |   78.12 |   84.33 | 67-72,85-87,94-96,106-111,120-122
+ src/domain/wallet.ts            |   76.92 |   87.84 | 43-45,55-60
+ src/infrastructure/telemetry.ts |   50.00 |  100.00 | 
+---------------------------------|---------|---------|-------------------
+
+ 35 pass
+ 0 fail
+ 132 expect() calls
+Ran 35 tests across 2 files. [37.00ms]
+$ bun test tests/integration --timeout 120000
+bun test v1.4.3 (c6da4a4d3)
+
+tests/integration/system.test.ts:
+(pass) Real PostgreSQL: schema, precision and transaction atomicity > reversible migrations, opening audit, uniqueness, immutability and constraints [10.20ms]
+(pass) Real PostgreSQL: schema, precision and transaction atomicity > failure after financial writes rolls back wallet, transaction, ledger, inbox and outbox [7.82ms]
+{"timestamp":"2026-10-16T18:09:28.142Z","event":"transaction_committed","correlationId":"582ec4f7-0eac-4f30-8ad2-989b61d54320","transactionId":"27f45295-6c50-4a69-ae78-286aaa74edb0","walletId":"9c56e5b3-cfe2-4763-b243-9c039e838227","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:28.144Z","event":"transaction_committed","correlationId":"b5e34320-f33f-46f7-9672-c3a9ecf74199","transactionId":"e009be78-58c5-4118-8a57-eeda8c1c6807","walletId":"9c56e5b3-cfe2-4763-b243-9c039e838227","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:28.145Z","event":"transaction_committed","correlationId":"13ea2bd8-e6d3-4160-b278-664c31540376","transactionId":"27f45295-6c50-4a69-ae78-286aaa74edb0","walletId":"9c56e5b3-cfe2-4763-b243-9c039e838227","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:28.148Z","event":"transaction_committed","correlationId":"17457042-78f1-44bc-97f7-7a95bd53018c","transactionId":"32f9da05-6171-4875-bd41-24318818c808","walletId":"9c56e5b3-cfe2-4763-b243-9c039e838227","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:28.149Z","event":"transaction_committed","correlationId":"a7b19ec3-9058-49c3-b3b1-4701fe6e9c6d","transactionId":"7940dd3d-2e3c-4d2c-9366-45e22ca5bfea","walletId":"9c56e5b3-cfe2-4763-b243-9c039e838227","providerId":"provider-a"}
+(pass) Real PostgreSQL: schema, precision and transaction atomicity > replay returns original balance, divergent key/provider identity conflicts, LOSS does not move balance [16.27ms]
+{"timestamp":"2026-10-16T18:09:38.237Z","event":"request_failed","correlationId":"1c5a6726-c250-4856-9fb1-cffd41b60c02","code":"DEPENDENCIES_UNAVAILABLE"}
+(pass) HTTP contract and stable ledger pagination > unresponsive SQS connection times out into readiness 503 while liveness stays 200 [10112.19ms]
+{"timestamp":"2026-10-16T18:09:38.294Z","event":"transaction_committed","correlationId":"http-contract","transactionId":"43bdf442-bf2e-40a9-8737-341d7632914a","walletId":"b6742e08-8a56-4570-8140-d8daf4eb797e","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.297Z","event":"transaction_committed","correlationId":"http-contract","transactionId":"86d26ee4-4c58-4033-91cf-cf698a57e487","walletId":"b6742e08-8a56-4570-8140-d8daf4eb797e","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.300Z","event":"transaction_committed","correlationId":"http-contract","transactionId":"fd6a219e-9faa-49d5-86d0-a27293a7f62d","walletId":"b6742e08-8a56-4570-8140-d8daf4eb797e","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.302Z","event":"request_failed","correlationId":"http-contract","code":"DEPENDENCIES_UNAVAILABLE"}
+(pass) HTTP contract and stable ledger pagination > validation, conflicts, business rejection, pending, lookup, readiness and correlation [41.20ms]
+{"timestamp":"2026-10-16T18:09:38.307Z","event":"transaction_committed","correlationId":"c412f9cb-e620-467d-b5be-d064d546db81","transactionId":"37ff77fb-9bcc-4a01-947a-43b89b86f931","walletId":"aebb8a6f-490b-4c13-9009-5fb7e1b53afc","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.308Z","event":"transaction_committed","correlationId":"8be522fd-a10d-4636-93ec-ad5e683dc298","transactionId":"e15feb4d-89be-488e-9ae6-464a3a747c81","walletId":"aebb8a6f-490b-4c13-9009-5fb7e1b53afc","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.311Z","event":"transaction_committed","correlationId":"9031d84d-fe65-4b0e-b6c8-b9f37dc9599f","transactionId":"3daceb0c-9229-4e10-b493-c4f5c5c2569b","walletId":"aebb8a6f-490b-4c13-9009-5fb7e1b53afc","providerId":"provider-a"}
+(pass) HTTP contract and stable ledger pagination > opaque cursor is wallet-bound and freezes the upper ledger boundary while new entries arrive [11.33ms]
+{"timestamp":"2026-10-16T18:09:38.322Z","event":"transaction_committed","correlationId":"4b448e39-4bd1-4d6d-930a-80adcee6861e","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.327Z","event":"transaction_committed","correlationId":"72c44127-f7c5-4443-81c5-267e8be5ee21","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.329Z","event":"transaction_committed","correlationId":"a7afc129-2194-4865-8756-71892b4c0e14","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.330Z","event":"transaction_committed","correlationId":"0dbfbc26-6134-4f75-a04e-8cf1c46e5bd8","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.331Z","event":"transaction_committed","correlationId":"8c3347c4-539d-4971-a6f6-388a9cff201c","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.333Z","event":"transaction_committed","correlationId":"a7466a2f-ee8d-4bf8-9eb4-4d64e19c4225","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.334Z","event":"transaction_committed","correlationId":"28045e90-9e50-4ed7-8ffa-1a16b52ee99d","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.334Z","event":"transaction_committed","correlationId":"51b45c3a-6019-4a9b-9afa-972057503be6","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.335Z","event":"transaction_committed","correlationId":"5cb0d0ee-5e4f-4b4a-812e-ddab45947187","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.336Z","event":"transaction_committed","correlationId":"f2c2401d-fdda-4fc4-bed3-8b95ad680812","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.337Z","event":"transaction_committed","correlationId":"8e99699a-a18a-466e-b254-be429aab3a52","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.337Z","event":"transaction_committed","correlationId":"bf3d809f-2fbf-43d6-aa01-3b2166f2336d","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.338Z","event":"transaction_committed","correlationId":"b9d9315a-79ea-46ff-96d9-87f27d175c70","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.338Z","event":"transaction_committed","correlationId":"fcab0858-b297-47bd-9a5b-c6ab19cf5bd3","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.339Z","event":"transaction_committed","correlationId":"9a15d0cf-5e7c-44e6-ac37-294d0140f3bb","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.339Z","event":"transaction_committed","correlationId":"37472528-e00b-4c84-9e10-1b046e0e5a87","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.340Z","event":"transaction_committed","correlationId":"7e0fc19e-a835-4bd2-a7fb-f6288d7676df","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.340Z","event":"transaction_committed","correlationId":"a30208f5-1a5f-4fc1-a9c6-8e9d20fcfbed","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.340Z","event":"transaction_committed","correlationId":"67242af3-6e3b-4b75-8a8f-54d2fdc88abf","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.341Z","event":"transaction_committed","correlationId":"65798e19-3544-4400-aa0a-040f66d6ce97","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.341Z","event":"transaction_committed","correlationId":"e8cb7b5c-7681-49f3-a071-d2eea3f43450","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.342Z","event":"transaction_committed","correlationId":"4065e493-8546-4f0f-8da5-9612a0375a97","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.342Z","event":"transaction_committed","correlationId":"3eab64f1-06f3-4870-927d-3ed6add2efe7","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.342Z","event":"transaction_committed","correlationId":"301ef590-3a41-4930-9304-83da0fa358ee","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.343Z","event":"transaction_committed","correlationId":"46b4f40b-031d-4a63-b627-29003c82f2f5","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.343Z","event":"transaction_committed","correlationId":"2497ad83-b235-4608-bdf6-81e47dae1569","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.343Z","event":"transaction_committed","correlationId":"c377c41b-d291-4ccb-8df0-636caa9da08a","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.344Z","event":"transaction_committed","correlationId":"3b4ef543-030b-4f98-8177-74025e44bbd4","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.344Z","event":"transaction_committed","correlationId":"26a678e5-6a99-4b84-b03d-4f8541eb3cba","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.344Z","event":"transaction_committed","correlationId":"91b7ef84-3a6b-4e3e-b277-6c6da947075d","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.345Z","event":"transaction_committed","correlationId":"0b270db2-8a69-44b8-b110-653a1b80def1","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.345Z","event":"transaction_committed","correlationId":"af2a02f3-68a1-425c-9e55-d135c8fff64d","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.345Z","event":"transaction_committed","correlationId":"ab433690-8dde-4888-8a1a-20fae0f65cb8","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.346Z","event":"transaction_committed","correlationId":"d5bd5ad1-f299-47d4-921d-be4a4b17ebc7","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.346Z","event":"transaction_committed","correlationId":"8eddccd2-5bdd-4d18-a02a-f382367a2d9e","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.346Z","event":"transaction_committed","correlationId":"8b6421c1-052b-4514-abfd-77aba6859c77","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.346Z","event":"transaction_committed","correlationId":"f0b575cf-1d37-40df-a0c6-2820321b14b1","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.347Z","event":"transaction_committed","correlationId":"168fbf48-11ac-48c8-a2f5-61c3f8adc793","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.347Z","event":"transaction_committed","correlationId":"0ad90ee5-73f7-42be-92ea-7c4326f4d311","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.347Z","event":"transaction_committed","correlationId":"fda86594-8900-435c-ad63-106f7e32d825","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.348Z","event":"transaction_committed","correlationId":"63031ec7-6387-404a-ae3c-f3c94f714232","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.348Z","event":"transaction_committed","correlationId":"f030130a-8dba-4c1b-8abe-649ac6b77758","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.348Z","event":"transaction_committed","correlationId":"a9bcc8af-eb1f-4b77-919b-1a0de50862af","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.348Z","event":"transaction_committed","correlationId":"c7aa0d5f-5ea9-4d31-954f-d7af267776d3","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.349Z","event":"transaction_committed","correlationId":"ba146d00-7052-4610-9b8e-f0451134fd6d","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.349Z","event":"transaction_committed","correlationId":"bcac2ca5-b171-4986-a34b-66eab570d03c","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.349Z","event":"transaction_committed","correlationId":"3858bc5a-ac50-47a6-b062-2dc79967400d","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.350Z","event":"transaction_committed","correlationId":"9d44659b-be10-4bb3-bf2b-28eff6c5afca","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.350Z","event":"transaction_committed","correlationId":"2686c39d-d337-4ce8-ac8e-786fe6ba80ea","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.350Z","event":"transaction_committed","correlationId":"3351950f-1810-4dc8-ba49-82edf2230ffb","transactionId":"4ed6aefa-7ede-49ae-915a-688182ca1772","walletId":"5e783dcf-faa0-4199-98c3-74bd59d0ff26","providerId":"provider-a"}
+(pass) Real concurrency across wallets and processes > 50 simultaneous identical bets debit once, without FIFO [36.67ms]
+{"timestamp":"2026-10-16T18:09:38.354Z","event":"transaction_committed","correlationId":"4d25c8f8-c59a-447d-ac0c-87ba713f1372","transactionId":"4182545b-3a49-4224-81e2-09f63cca29b0","walletId":"9f86f367-50dc-46c8-9c70-7c427201099f","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.357Z","event":"transaction_committed","correlationId":"04814969-2559-4937-882d-38236ce61f92","transactionId":"66d64eb5-a986-43c0-b745-975290939aa9","walletId":"9f86f367-50dc-46c8-9c70-7c427201099f","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.358Z","event":"transaction_committed","correlationId":"eaaf3c08-bd06-4f44-ae27-eeac01c5c7ed","transactionId":"4182545b-3a49-4224-81e2-09f63cca29b0","walletId":"9f86f367-50dc-46c8-9c70-7c427201099f","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.358Z","event":"transaction_committed","correlationId":"4994088e-94f3-4fbf-a83c-95dbb200e19d","transactionId":"66d64eb5-a986-43c0-b745-975290939aa9","walletId":"9f86f367-50dc-46c8-9c70-7c427201099f","providerId":"provider-a"}
+(pass) Real concurrency across wallets and processes > two simultaneous 80.00 bets from 100.00 give one debit, one business rejection and 20.00 [7.30ms]
+{"timestamp":"2026-10-16T18:09:38.363Z","event":"transaction_committed","correlationId":"6cb6f7c3-1672-4d10-9b94-81577dc672c9","transactionId":"e8af5269-c3c1-46c3-9bf5-9fe9958840ae","walletId":"996bbe67-83f0-4a7e-bb3f-239d8cdc8ef3","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.416Z","event":"transaction_committed","correlationId":"06774b44-9253-4bbd-82d0-e94896f5198d","transactionId":"b8ff7b82-26f7-4229-ba46-f82116ffc1b9","walletId":"7d285a5a-1865-4d44-8b72-26f8347f561b","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.416Z","event":"transaction_committed","correlationId":"8625f022-04f4-4b70-8444-093a1895918e","transactionId":"4d283e1a-e2d5-4d54-9e30-7fd0c889d5c6","walletId":"0dabc897-1a93-4280-a2f7-93acea14681c","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.416Z","event":"transaction_committed","correlationId":"c711d99e-a2f0-4933-888c-cd4b6c014722","transactionId":"81db1406-8789-4ff7-8b68-9a67eeff7c41","walletId":"2f84331e-a3d8-4f7f-8a70-86e00a488369","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.416Z","event":"transaction_committed","correlationId":"4ae6ae1b-eed6-4701-b6b8-43799e03de75","transactionId":"ad46a165-25cb-4c3d-8c50-a4d7d1bc4601","walletId":"c2284646-9f97-4da1-b759-82f0eca9d128","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.417Z","event":"transaction_committed","correlationId":"2408ed8e-97ba-4f45-93dd-e241fc15c42e","transactionId":"72fbb61b-9d96-48cd-8d65-467d7f8dda56","walletId":"57d30908-6239-469c-a372-e2ded0e3bcf4","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.417Z","event":"transaction_committed","correlationId":"acd033a6-dc7f-4132-8c0a-18e925f2a496","transactionId":"cd6e6a8a-3dff-4cf4-a65e-7e8c25c6db03","walletId":"7e167ab7-ba4d-447c-bf2c-83f7c5dbe08a","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.417Z","event":"transaction_committed","correlationId":"78748b1f-0f60-44e8-80d8-cd01988d9002","transactionId":"350a54de-462d-4958-95b9-734dac7f2aa2","walletId":"c16b8ef1-08dc-4d5c-a2ac-2dc17ffd1471","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.417Z","event":"transaction_committed","correlationId":"4b9aeaa9-be5d-4cc5-a40a-3d10dc66f7a7","transactionId":"289215a4-9ae0-4779-bf09-2c6787a76469","walletId":"eaafe203-86ac-40b8-a62e-32245817626b","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.418Z","event":"transaction_committed","correlationId":"4211ad94-0c0e-4239-a438-39719295ded5","transactionId":"5985bce3-e931-4bdd-a4c0-a6babb21f38a","walletId":"bfe2f2e2-a992-40c6-bfc2-8e5ab1a5df06","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.418Z","event":"transaction_committed","correlationId":"24bf58f2-e6bb-4525-ba76-cdd0b28236cd","transactionId":"04c7c72f-8d0e-462c-ae53-89b56f23f7d9","walletId":"cdb5ae6d-77ac-4f4b-a1d3-50f0445aa2f6","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.418Z","event":"transaction_committed","correlationId":"ad6efede-41f1-44ca-b598-598e9a1f110e","transactionId":"141425c7-bbd8-4602-8b81-e349d4bb66ac","walletId":"6d076f83-4dc5-4f71-92e4-77610bd1672b","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:38.418Z","event":"transaction_committed","correlationId":"5d507643-63c7-43eb-9a74-1a4c3529439f","transactionId":"d71e3908-bfd3-4aa5-899a-ce66e0abba1c","walletId":"d319e905-f6ac-4a78-b3d0-cb2f77409260","providerId":"provider-a"}
+(pass) Real concurrency across wallets and processes > a locked hot wallet does not block other wallets [61.53ms]
+(pass) Real concurrency across wallets and processes > three independent Bun/Nest processes handle 50 concurrent HTTP requests and survive restart [621.95ms]
+{"timestamp":"2026-10-16T18:09:39.046Z","event":"transaction_committed","correlationId":"7eaf4186-62ad-4bcd-81bf-18eeba42464b","transactionId":"3afa72b5-7c38-4ada-8df6-e650d1bf96d9","walletId":"5e270431-a4ff-43ff-aedb-d5b17a716b91","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:39.047Z","event":"transaction_committed","correlationId":"ad30049e-0da9-4443-8a5d-eda4b0c5ab8a","transactionId":"8c4c117e-2d38-4305-8e3d-d72fc19a7639","walletId":"5e270431-a4ff-43ff-aedb-d5b17a716b91","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:39.051Z","event":"transaction_committed","correlationId":"976ddf6a-3cc5-457d-9b0a-f4bf032c18c5","transactionId":"7a0e52dd-21d9-4332-95bb-9e54c31bf762","walletId":"5e270431-a4ff-43ff-aedb-d5b17a716b91","providerId":"provider-a"}
+(pass) References, reversals and eventual terminal states > REFUND arrives before BET, is retried, then applied once [9.34ms]
+{"timestamp":"2026-10-16T18:09:39.054Z","event":"transaction_committed","correlationId":"0da9710e-f4df-4d22-a5eb-2620b3ac091f","transactionId":"97dcb916-80dd-479f-9db6-7a1b9f2146d0","walletId":"37f00131-29ec-4b78-9172-f0a8e0401996","providerId":"provider-a"}
+(pass) References, reversals and eventual terminal states > expiry rejects missing reference with an outbox event [5.85ms]
+{"timestamp":"2026-10-16T18:09:39.060Z","event":"transaction_committed","correlationId":"945e5f6e-7da2-46a1-a42a-5ed7102d30f6","transactionId":"4bda7e16-b303-43e5-a2ae-9fbf61a4a948","walletId":"59db25eb-c27e-4067-be46-ad1dd074ef7d","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:39.061Z","event":"transaction_committed","correlationId":"4c18902c-e2a3-4075-8235-148ad5c3ef7c","transactionId":"6d4acede-289b-4d6a-b9f7-ca53ef052bdb","walletId":"59db25eb-c27e-4067-be46-ad1dd074ef7d","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:39.062Z","event":"transaction_committed","correlationId":"1ebce21f-e6b9-4250-848f-3a1eb2c88541","transactionId":"917ea8fb-f989-4c1b-846d-8ae6ca1a929e","walletId":"59db25eb-c27e-4067-be46-ad1dd074ef7d","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:39.064Z","event":"transaction_committed","correlationId":"b5ef3609-876f-4834-8969-16e1bc65e46a","transactionId":"975db32f-9356-4c8b-af71-3d423026e13f","walletId":"59db25eb-c27e-4067-be46-ad1dd074ef7d","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:39.065Z","event":"transaction_committed","correlationId":"211d9b1a-a1b2-466e-9207-09fcc7001b3d","transactionId":"e3064a1d-24dc-47c3-bf77-20f708858181","walletId":"59db25eb-c27e-4067-be46-ad1dd074ef7d","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:39.066Z","event":"transaction_committed","correlationId":"a6ec8d9b-ae46-4faf-8719-daae99688616","transactionId":"d194ac07-24d5-43dd-854b-a7c37baf6352","walletId":"59db25eb-c27e-4067-be46-ad1dd074ef7d","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:39.067Z","event":"transaction_committed","correlationId":"603c4e80-379b-4f06-a7ca-b57088868f3f","transactionId":"b6af76fe-1796-4faa-b23c-1823df18cd2e","walletId":"59db25eb-c27e-4067-be46-ad1dd074ef7d","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:39.068Z","event":"transaction_committed","correlationId":"0bd790ba-f23c-4672-ac2b-9511131136ef","transactionId":"61e46a32-6d4b-46f6-b4f5-a7f9a7832bb3","walletId":"59db25eb-c27e-4067-be46-ad1dd074ef7d","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:39.069Z","event":"transaction_committed","correlationId":"c8a05e66-d680-486d-ae57-a89ce651cbe6","transactionId":"af09bf1d-e0c9-4b45-a395-c6039b88bc03","walletId":"59db25eb-c27e-4067-be46-ad1dd074ef7d","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:39.070Z","event":"transaction_committed","correlationId":"d887e3a6-c133-4ba7-a708-26e3833160df","transactionId":"ef120090-b16e-4afc-8616-6d4758a9b102","walletId":"abae059d-ea28-4a6f-90ec-4186d0047935","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:39.072Z","event":"transaction_committed","correlationId":"adfa45a1-fa5f-4bf9-8e65-0ba9824a36d6","transactionId":"5d8e5f5e-d309-4015-85ae-5c9044bd8f31","walletId":"abae059d-ea28-4a6f-90ec-4186d0047935","providerId":"provider-a"}
+(pass) References, reversals and eventual terminal states > rollback credit and debit, full amounts, same round, rejected reference and negative reversal [14.92ms]
+{"timestamp":"2026-10-16T18:09:39.080Z","event":"transaction_committed","correlationId":"992e7fd5-e012-48e7-bde9-78f4e68f4bfc","messageId":"992e7fd5-e012-48e7-bde9-78f4e68f4bfc","transactionId":"08cb2081-6864-4bbb-a847-ae02cd6f2928","walletId":"6192484d-1e13-46a1-aff0-8c2b7c19bd45","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:39.084Z","event":"transaction_committed","correlationId":"992e7fd5-e012-48e7-bde9-78f4e68f4bfc","messageId":"992e7fd5-e012-48e7-bde9-78f4e68f4bfc","transactionId":"08cb2081-6864-4bbb-a847-ae02cd6f2928","walletId":"6192484d-1e13-46a1-aff0-8c2b7c19bd45","providerId":"provider-a"}
+(pass) Real SQS: inbox, retries, DLQ and process death > redelivering the same envelope records one inbox and one debit [14.25ms]
+{"timestamp":"2026-10-16T18:09:41.027Z","event":"transaction_committed","correlationId":"4f71d569-fc97-48d3-8c42-9359ba2d6336","messageId":"4f71d569-fc97-48d3-8c42-9359ba2d6336","transactionId":"8fca12d8-4853-413a-809a-6d4de748033e","walletId":"aaf5daf1-6915-438f-852c-e399df5556cc","providerId":"provider-a"}
+(pass) Real SQS: inbox, retries, DLQ and process death > worker is SIGKILLed after SQL commit and before ack; redelivery after visibility expiry is safe [1944.26ms]
+{"timestamp":"2026-10-16T18:09:41.073Z","event":"consumer_failed","correlationId":"8faf8fab-d603-457e-a3fd-4359260f257a","messageId":"8faf8fab-d603-457e-a3fd-4359260f257a","walletId":"f2149931-7af1-42c2-bf63-7a4ed179acf8","providerId":"provider-a","code":"55P03"}
+{"timestamp":"2026-10-16T18:09:44.025Z","event":"transaction_committed","correlationId":"8faf8fab-d603-457e-a3fd-4359260f257a","messageId":"8faf8fab-d603-457e-a3fd-4359260f257a","transactionId":"c9735196-a290-4bb8-bef3-f556a33cc080","walletId":"f2149931-7af1-42c2-bf63-7a4ed179acf8","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:44.030Z","event":"consumer_failed","correlationId":"a260c0b6-3c55-4a73-8ec9-0999f2e0005d","code":"PERMANENT_MESSAGE"}
+(pass) Real SQS: inbox, retries, DLQ and process death > transient SQL failure uses visibility backoff then succeeds; permanent input goes to DLQ [3003.77ms]
+{"timestamp":"2026-10-16T18:09:44.063Z","event":"consumer_failed","correlationId":"1d76ecba-5985-4181-ba28-61c204f3a505","messageId":"1d76ecba-5985-4181-ba28-61c204f3a505","walletId":"03f65eb0-22fc-48e1-9fcb-19242ca065c2","providerId":"provider-a","code":"55P03"}
+{"timestamp":"2026-10-16T18:09:44.070Z","event":"consumer_failed","correlationId":"1d76ecba-5985-4181-ba28-61c204f3a505","messageId":"1d76ecba-5985-4181-ba28-61c204f3a505","walletId":"03f65eb0-22fc-48e1-9fcb-19242ca065c2","providerId":"provider-a","code":"P0001"}
+{"timestamp":"2026-10-16T18:09:44.071Z","event":"transaction_committed","correlationId":"1d76ecba-5985-4181-ba28-61c204f3a505","messageId":"1d76ecba-5985-4181-ba28-61c204f3a505","transactionId":"da2e5d7c-be81-45c9-aa67-e5cdaf5297ed","walletId":"03f65eb0-22fc-48e1-9fcb-19242ca065c2","providerId":"provider-a"}
+(pass) Real SQS: inbox, retries, DLQ and process death > bounded retries transfer original message to DLQ and record FAILED when DB is available [44.58ms]
+{"timestamp":"2026-10-16T18:09:44.087Z","event":"transaction_committed","correlationId":"249879e8-0671-4c22-91b7-9b454ea40bc7","messageId":"249879e8-0671-4c22-91b7-9b454ea40bc7","transactionId":"43fd6b96-dd49-489c-b77e-5799e634cdec","walletId":"61e81c5b-d7b0-4fd2-b328-2065e34b2614","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:44.114Z","event":"transaction_committed","correlationId":"249879e8-0671-4c22-91b7-9b454ea40bc7","messageId":"249879e8-0671-4c22-91b7-9b454ea40bc7","transactionId":"43fd6b96-dd49-489c-b77e-5799e634cdec","walletId":"61e81c5b-d7b0-4fd2-b328-2065e34b2614","providerId":"provider-a"}
+(pass) Real SQS: inbox, retries, DLQ and process death > returning visibility during drain safely redelivers an in-flight message [36.35ms]
+(pass) Outbox: post-commit visibility, concurrent publishers and recovery > two publisher processes publish committed backlog with stable event identities [926.92ms]
+{"timestamp":"2026-10-16T18:09:45.046Z","event":"transaction_committed","correlationId":"4a12b261-70ca-4655-add1-558ae2246c39","transactionId":"40e83ea3-1f31-480d-a3a9-f19c3f79e0e0","walletId":"91848d49-0a31-4e6f-ae72-123779b4bccc","providerId":"provider-a"}
+{"timestamp":"2026-10-16T18:09:45.047Z","event":"outbox_publish_retry","code":"SQS_UNAVAILABLE"}
+(pass) Outbox: post-commit visibility, concurrent publishers and recovery > publisher failure stores backoff, a fresh publisher recovers; uncommitted rows are invisible [206.90ms]
+{"timestamp":"2026-10-16T18:09:45.252Z","event":"reconciliation_divergence","correlationId":"corrupt-projection","walletId":"9f09170d-f380-455e-9948-ff5b21e45f30","code":"LEDGER_MISMATCH"}
+{"evidence":"reconciliation-divergence","walletId":"9f09170d-f380-455e-9948-ff5b21e45f30","storedBalance":{"amount":"99.00","currency":"BRL"},"calculatedBalance":{"amount":"100.00","currency":"BRL"},"difference":{"amount":"-1.00","currency":"BRL"},"consistent":false,"checkedEntries":1}
+(pass) Operational evidence: corruption detection and real process shutdown > reconciliation reports privileged corruption, logs and counts it without repairing the balance [3.90ms]
+{"evidence":"production-sigterm","visibilityReturned":false,"exitCode":0,"reconciliation":{"walletId":"560d24f0-5f15-4d6a-8d53-fdb06b33cf6a","storedBalance":{"amount":"75.00","currency":"BRL"},"calculatedBalance":{"amount":"75.00","currency":"BRL"},"difference":{"amount":"0.00","currency":"BRL"},"consistent":true,"checkedEntries":2},"shutdownEvents":[{"timestamp":"2026-10-16T18:09:45.497Z","event":"shutdown_started"},{"timestamp":"2026-10-16T18:09:45.980Z","event":"shutdown_complete"}]}
+(pass) Operational evidence: corruption detection and real process shutdown > SIGTERM on src/main.ts finishes an in-flight message without duplicate debit [1768.19ms]
+{"timestamp":"2026-10-16T18:09:47.850Z","event":"transaction_committed","correlationId":"9610ea7f-91b9-40ac-8960-4223432968ec","messageId":"9610ea7f-91b9-40ac-8960-4223432968ec","transactionId":"ea44d55b-9220-4344-bc49-8205a257b1e8","walletId":"dffc4761-a08a-482a-824a-f6b66dc47fab","providerId":"provider-a"}
+{"evidence":"production-sigterm","visibilityReturned":true,"exitCode":0,"reconciliation":{"walletId":"dffc4761-a08a-482a-824a-f6b66dc47fab","storedBalance":{"amount":"75.00","currency":"BRL"},"calculatedBalance":{"amount":"75.00","currency":"BRL"},"difference":{"amount":"0.00","currency":"BRL"},"consistent":true,"checkedEntries":2},"shutdownEvents":[{"timestamp":"2026-10-16T18:09:47.351Z","event":"shutdown_started"},{"timestamp":"2026-10-16T18:09:47.454Z","event":"shutdown_visibility_returned"},{"timestamp":"2026-10-16T18:09:47.829Z","event":"shutdown_complete"}]}
+(pass) Operational evidence: corruption detection and real process shutdown > SIGTERM on src/main.ts returns visibility after deadline without duplicate debit [831.68ms]
+
+ 23 pass
+ 0 fail
+ 206 expect() calls
+Ran 23 tests across 1 file. [20.10s]

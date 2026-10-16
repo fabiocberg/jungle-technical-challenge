@@ -1,0 +1,8 @@
+{
+  "command": ["bun", "run", "typecheck"],
+  "startedAt": "2026-10-16T15:10:21.077116-03:00",
+  "durationSeconds": 1.362,
+  "exitCode": 0,
+  "output": "typecheck.txt",
+  "sha256": "52ca5f7116b6c3adad7430344560b35a2480f390cf8478e243e65397bf7a5c98"
+}

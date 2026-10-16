@@ -1,0 +1,27 @@
+$ bun run demo
+
+$ bun scripts/demo.ts
+{
+  "walletId": "ded06ae3-db9e-4a12-80b5-c11a53ccddcb",
+  "parallelRequests": 50,
+  "appliedBets": 1,
+  "idempotentReplays": 49,
+  "sqsRefund": "PROCESSED",
+  "reconciliation": {
+    "walletId": "ded06ae3-db9e-4a12-80b5-c11a53ccddcb",
+    "storedBalance": {
+      "amount": "100.00",
+      "currency": "BRL"
+    },
+    "calculatedBalance": {
+      "amount": "100.00",
+      "currency": "BRL"
+    },
+    "difference": {
+      "amount": "0.00",
+      "currency": "BRL"
+    },
+    "consistent": true,
+    "checkedEntries": 3
+  }
+}

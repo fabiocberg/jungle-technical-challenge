@@ -1,0 +1,94 @@
+{
+  "createdAt": "2026-10-16T15:11:05.552433-03:00",
+  "upstream": {
+    "url": "https://github.com/junglegaming/backend-challenge",
+    "commit": "c7143e6d041585d6913f56eb7415105e074f83dc",
+    "readmeFile": "upstream-README.txt",
+    "sha256": "47795fce2fc38cae5f1b91368ebaf80b7a2ed1fe147f36704b665faf0613812e"
+  },
+  "localGitHead": "bb6a3970944c65f04658775e8c567a18e61e565d",
+  "workingTree": "Uncommitted implementation; file hashes below identify the verified snapshot.",
+  "environment": {
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "machine": "arm64",
+    "bunHostAndContainer": "1.4.3",
+    "dockerClient": "29.9.1",
+    "dockerCompose": "5.6.0",
+    "postgresql": "17.6",
+    "localstack": "4.7.0:82de91e30",
+    "appInstances": 3,
+    "details": "environment.txt"
+  },
+  "checks": {
+    "hostUnit": {
+      "pass": 35,
+      "fail": 0,
+      "assertions": 132
+    },
+    "hostIntegration": {
+      "pass": 23,
+      "fail": 0,
+      "assertions": 206
+    },
+    "dockerUnit": {
+      "pass": 35,
+      "fail": 0,
+      "assertions": 132
+    },
+    "dockerIntegration": {
+      "pass": 23,
+      "fail": 0,
+      "assertions": 206
+    },
+    "runtimeProbe": "PASS across 3 instances; SQS and PostgreSQL outages and recovery",
+    "knownPreviousFailure": "runtime-before-fix.json records the failure corrected in src/infrastructure/sqs.ts"
+  },
+  "hashAlgorithm": "SHA-256",
+  "scope": "Source, tests, scripts, configuration and documentation. Evidence output hashes are in the sibling per-command JSON records. Generated dist/node_modules and evidence files are excluded from this source snapshot.",
+  "files": {
+    ".dockerignore": "3de7be493d8f6acd4e895663a4f06f20986a95e84eaedb2c28a6151161c24057",
+    ".env.example": "b8de8375569f415dcbe41cf82dfa8f99ce426e13b9b6860481263b062bab31ee",
+    ".github/workflows/ci.yml": "b881630344ff030699a9e206374032ad3a4353f0d4fc37498521eab2fd72e4a4",
+    ".gitignore": "0ce68679c61ec373e5d1b41810bce5ba9d4eb5ae9ece671bb301cfd3c40be40c",
+    ".prettierignore": "0ad8ddde773c46a6655bc58ba4d06d51ce674666ee6c97afda165ddadb7092d7",
+    ".prettierrc.json": "32dcd743a0ffca59a737c87abcfcc3f57a0cede5cedb6a8b1b68d32a3b6d4506",
+    "ARCHITECTURE.md": "c5bd6ccd675edad6e355ed825c9d851026064eab2976dedabb4f144ed2e17d16",
+    "Dockerfile": "c8f5926fb309f644287b789fa95812af6e1c74ca6d8ab2353386450fd211bb28",
+    "README.md": "165d619a18cc15e6c7b91436e61c6bd0155067292d78c9298152f581ee807a58",
+    "bun.lock": "413ed57ef9c69fe0cc8be464813c8c42c2a09e03234a902b437f86918c7b4bc5",
+    "compose.yaml": "1f535f105e46e70980504b00b792ca2869bd4d4f8896bab0ddd9cf3b0398dbc6",
+    "docker/localstack/init.sh": "aa06b2250c767bf5666f0670a90e4825180dfdf9e81dc821829793097d30a99e",
+    "docs/REQUIREMENTS.md": "2f9e54220b9202224b8dfe69c2bd964a710c03e9ec972450a084dfa1b999da7c",
+    "docs/VERIFICATION.md": "25a8f7dca6146bcc562613172df845f9e62a693034f9628926786ef76153d796",
+    "package.json": "2a0667e0996e7fff3f334f50644f78d3acb3a68cc135595e58b36405f02ed327",
+    "scripts/demo.ts": "5db644b3bc1bdbc3b56b29d916863166f665c76edf56a1512db975aa42f77dde",
+    "scripts/migrate.ts": "20580cef98d97f618cb9ee9514bf222a17ecc00a8dfea7d1b063312ebf51b5a0",
+    "scripts/verify-runtime.ts": "fa39ba6035d19682fbcf41e4b07c69b79b55df257e9b84783a4a9e8ae4ccc7d5",
+    "src/application/contracts.ts": "767e170946c4b4f987652d40c775bbc17507b3bdac3c60f86443e2acb1b40fb8",
+    "src/application/ports.ts": "fd1c50fa92fec11d23237773cb6e3525e93fb193469ce5b3d88006ffcb02befa",
+    "src/application/queries.ts": "783f5be73d2d4e287476e3e0020b21ca6b461aa84a2eac087bec6d093df6c570",
+    "src/application/wagering.ts": "0bac9e1075c03c1665d6aa52b5e78550b65e475214ad32cc7a75e5b31255b039",
+    "src/application/workers.ts": "abdda5fceb642079ae7e2385a29addfe6912dbe290571a25deaa86918dd9777b",
+    "src/domain/errors.ts": "8b821c5323435fe9dbe7384f1a2db40b47f325c6a7a795c3d9a7aaf805d44d29",
+    "src/domain/events.ts": "40d64cc7e8bb26d71bdecc79bad051c97768e6b6425fe9cb507fcc07aea95d82",
+    "src/domain/idempotency.ts": "967ef429b4faebb79d5893ecc14fb5db5270df4443ddc5ee745dd84fdde9e346",
+    "src/domain/ledger.ts": "346a81fc0ab9a685d9bd3edbf003e0f036f76820b38bdda919e917aee05aecac",
+    "src/domain/messages.ts": "05c1938032a05576802de29f103f0eef3f0aa091d493fac56cef71f02fb26ad2",
+    "src/domain/money.ts": "f6d814192a3dace050dc5ddcb3f8352911422459ebc10b3076f00295cd930d97",
+    "src/domain/transaction.ts": "f10171531cc80ba80b755b24a3763bc54102d338c70a332f889e23dbf68e3f10",
+    "src/domain/wallet.ts": "172f85c57a1a9000d3f54fca48f3e440af6aa579e84f1c245dc7f7698fd41b5a",
+    "src/http/app.ts": "93117ce3bdc8f78659b8e855240575f257336fc7f4a4e1a2b538a16c8aa37d85",
+    "src/infrastructure/config.ts": "5358d6928f13647783c08fccd9ec41fb5f85d725e904f7236bc1d82177c59e7b",
+    "src/infrastructure/database.ts": "a1c79d525e4a443519d27c0ae27c0aecca6d2e4d5eaff21d42dcf1eea7cd23d6",
+    "src/infrastructure/migrations/1792100000000-InitialSchema.ts": "c647456968b4d6b3ba70c163ae85c31221a8a3dd606ac34d71c9d6b09e9bce76",
+    "src/infrastructure/sqs.ts": "d17c8e9746d64247483a2f6e1846605d05380338bd7ff2c419e0aa77899a67aa",
+    "src/infrastructure/telemetry.ts": "d1e6e653937c45905d61515faf8dcf5b1e6d6b77c248c7650e3ba85b1f85e62a",
+    "src/main.ts": "197ba36ff8ac5ad6f445f5efe75976dc1b848e2cfcbaef60b233159ddcb9b61c",
+    "tests/fixtures/process.ts": "0804b84c22f14a92d45745b4d45fcbf2a59f6f68701b046892635a9c07fc2e82",
+    "tests/integration/system.test.ts": "be34414e492e1e7924c391efa43a3807cb9a2913bb503cfd4c846b700ad6e322",
+    "tests/unit/domain.test.ts": "45e94196f935958a924b144d11cff900a1dc361cc5c22ded8b7c29e5952652cd",
+    "tests/unit/telemetry.test.ts": "9d0424f8786ef650a345effabe560eac793b802e874cd759f190b2eebd83bbd5",
+    "tsconfig.build.json": "4c653348551b405896bd95918551641fdd408503e226bd978647e11e922d2064",
+    "tsconfig.json": "0f046fd490dc74846d0db39b45b41ad449dcdc6af4d95e66be8d9c15ede2dfb8"
+  }
+}

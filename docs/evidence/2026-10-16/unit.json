@@ -1,0 +1,8 @@
+{
+  "command": ["bun", "run", "test:unit"],
+  "startedAt": "2026-10-16T15:02:34.977451-03:00",
+  "durationSeconds": 0.152,
+  "exitCode": 0,
+  "output": "unit.txt",
+  "sha256": "d8856eb53f8e2aac979b21c36d1eb14eb27aa1b477e1158aaa8e608d82982b79"
+}

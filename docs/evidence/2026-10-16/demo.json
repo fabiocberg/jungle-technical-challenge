@@ -1,0 +1,8 @@
+{
+  "command": ["bun", "run", "demo"],
+  "startedAt": "2026-10-16T15:09:12.001057-03:00",
+  "durationSeconds": 0.518,
+  "exitCode": 0,
+  "output": "demo.txt",
+  "sha256": "58f482e16b04a8ada8d1119ce46773629685ec267297bc550effec5adf559b69"
+}

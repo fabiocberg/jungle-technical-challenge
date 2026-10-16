@@ -1,0 +1,8 @@
+{
+  "command": ["bun", "run", "format:check"],
+  "startedAt": "2026-10-16T15:11:06.374926-03:00",
+  "durationSeconds": 2.701,
+  "exitCode": 0,
+  "output": "format.txt",
+  "sha256": "4434fa07ee44379e167b6a1b5d783bd9ec8438754215b234d55675f344c0462e"
+}

@@ -1,0 +1,17 @@
+{
+  "command": [
+    "docker",
+    "compose",
+    "up",
+    "-d",
+    "--build",
+    "--wait",
+    "--scale",
+    "app=3"
+  ],
+  "startedAt": "2026-10-16T15:06:01.977668-03:00",
+  "durationSeconds": 19.153,
+  "exitCode": 0,
+  "output": "compose.txt",
+  "sha256": "09fadb03e6f885c9c0d9567ee3895c77092469a3fb009d7bac90ca97c1024c45"
+}

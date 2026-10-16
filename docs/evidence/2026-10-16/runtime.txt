@@ -1,0 +1,46 @@
+$ bun scripts/verify-runtime.ts
+
+{"base":"http://localhost:3002","path":"/health/live","status":200,"durationMs":6,"body":"{\"status\":\"live\"}"}
+{"base":"http://localhost:3001","path":"/health/live","status":200,"durationMs":7,"body":"{\"status\":\"live\"}"}
+{"base":"http://localhost:3000","path":"/health/live","status":200,"durationMs":9,"body":"{\"status\":\"live\"}"}
+{"base":"http://localhost:3002","path":"/health/ready","status":200,"durationMs":11,"body":"{\"status\":\"ready\"}"}
+{"base":"http://localhost:3001","path":"/health/ready","status":200,"durationMs":12,"body":"{\"status\":\"ready\"}"}
+{"base":"http://localhost:3000","path":"/health/ready","status":200,"durationMs":12,"body":"{\"status\":\"ready\"}"}
+{"base":"http://localhost:3000","metrics":"all seven families present"}
+{"base":"http://localhost:3001","metrics":"all seven families present"}
+{"base":"http://localhost:3002","metrics":"all seven families present"}
+ Container jungle-wager-localstack-1 Paused 
+{"dependency":"SQS","state":"paused"}
+{"base":"http://localhost:3000","path":"/health/live","status":200,"durationMs":2,"body":"{\"status\":\"live\"}"}
+{"base":"http://localhost:3002","path":"/health/live","status":200,"durationMs":3,"body":"{\"status\":\"live\"}"}
+{"base":"http://localhost:3001","path":"/health/live","status":200,"durationMs":3,"body":"{\"status\":\"live\"}"}
+{"base":"http://localhost:3002","path":"/health/ready","status":503,"durationMs":10020,"body":"{\"code\":\"DEPENDENCIES_UNAVAILABLE\",\"correlationId\":\"813c9d93-5a2d-4f0e-99a5-da36c462b064\"}"}
+{"base":"http://localhost:3001","path":"/health/ready","status":503,"durationMs":10020,"body":"{\"code\":\"DEPENDENCIES_UNAVAILABLE\",\"correlationId\":\"f60c398f-1cb9-4aae-8d9f-15d726a07153\"}"}
+{"base":"http://localhost:3000","path":"/health/ready","status":503,"durationMs":10024,"body":"{\"code\":\"DEPENDENCIES_UNAVAILABLE\",\"correlationId\":\"8e377e6b-1d50-4ca7-b3af-a3a9f4d93b67\"}"}
+ Container jungle-wager-localstack-1 Unpaused 
+{"base":"http://localhost:3000","path":"/health/live","status":200,"durationMs":1,"body":"{\"status\":\"live\"}"}
+{"base":"http://localhost:3002","path":"/health/live","status":200,"durationMs":1,"body":"{\"status\":\"live\"}"}
+{"base":"http://localhost:3001","path":"/health/live","status":200,"durationMs":2,"body":"{\"status\":\"live\"}"}
+{"base":"http://localhost:3001","path":"/health/ready","status":200,"durationMs":30,"body":"{\"status\":\"ready\"}"}
+{"base":"http://localhost:3000","path":"/health/ready","status":200,"durationMs":30,"body":"{\"status\":\"ready\"}"}
+{"base":"http://localhost:3002","path":"/health/ready","status":200,"durationMs":30,"body":"{\"status\":\"ready\"}"}
+ Container jungle-wager-postgres-1 Stopping 
+ Container jungle-wager-postgres-1 Stopped 
+{"dependency":"PostgreSQL","state":"stopped"}
+{"base":"http://localhost:3002","path":"/health/live","status":200,"durationMs":1,"body":"{\"status\":\"live\"}"}
+{"base":"http://localhost:3001","path":"/health/live","status":200,"durationMs":1,"body":"{\"status\":\"live\"}"}
+{"base":"http://localhost:3000","path":"/health/live","status":200,"durationMs":5,"body":"{\"status\":\"live\"}"}
+{"base":"http://localhost:3001","path":"/health/ready","status":503,"durationMs":13,"body":"{\"code\":\"DEPENDENCIES_UNAVAILABLE\",\"correlationId\":\"f443b9e5-1633-442a-b71e-6ed15f6a249c\"}"}
+{"base":"http://localhost:3002","path":"/health/ready","status":503,"durationMs":13,"body":"{\"code\":\"DEPENDENCIES_UNAVAILABLE\",\"correlationId\":\"e824bf7e-8113-4b74-9adb-ec35e3d58f38\"}"}
+{"base":"http://localhost:3000","path":"/health/ready","status":503,"durationMs":13,"body":"{\"code\":\"DEPENDENCIES_UNAVAILABLE\",\"correlationId\":\"ee9d491b-dbfb-4717-80bc-c5d58b7e5be3\"}"}
+ Container jungle-wager-postgres-1 Starting 
+ Container jungle-wager-postgres-1 Started 
+ Container jungle-wager-postgres-1 Waiting 
+ Container jungle-wager-postgres-1 Healthy 
+{"base":"http://localhost:3002","path":"/health/live","status":200,"durationMs":5,"body":"{\"status\":\"live\"}"}
+{"base":"http://localhost:3001","path":"/health/live","status":200,"durationMs":7,"body":"{\"status\":\"live\"}"}
+{"base":"http://localhost:3000","path":"/health/live","status":200,"durationMs":8,"body":"{\"status\":\"live\"}"}
+{"base":"http://localhost:3001","path":"/health/ready","status":200,"durationMs":20,"body":"{\"status\":\"ready\"}"}
+{"base":"http://localhost:3000","path":"/health/ready","status":200,"durationMs":20,"body":"{\"status\":\"ready\"}"}
+{"base":"http://localhost:3002","path":"/health/ready","status":200,"durationMs":20,"body":"{\"status\":\"ready\"}"}
+{"result":"PASS","instances":3}

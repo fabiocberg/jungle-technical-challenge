@@ -1,0 +1,8 @@
+{
+  "command": ["bun", "run", "build"],
+  "startedAt": "2026-10-16T15:10:21.105696-03:00",
+  "durationSeconds": 1.273,
+  "exitCode": 0,
+  "output": "build.txt",
+  "sha256": "d1dfc35f408c8bf29c8111491660ccaf486feb65fbe30e86acc7fab760658644"
+}

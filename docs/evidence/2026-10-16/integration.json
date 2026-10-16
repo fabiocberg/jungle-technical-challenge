@@ -1,0 +1,8 @@
+{
+  "command": ["bun", "run", "test:integration"],
+  "startedAt": "2026-10-16T15:06:01.028527-03:00",
+  "durationSeconds": 21.059,
+  "exitCode": 0,
+  "output": "integration.txt",
+  "sha256": "2120e06929a50cec9901e5b691a0001b752028fcb10e4633407c806eff877157"
+}
